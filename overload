@@ -1,0 +1,31 @@
+
+from typing import Any, Literal, Protocol, TypedDict, overload, runtime_checkable
+
+@runtime_checkable
+class _HasVersion(Protocol):
+
+    def __getitem__(self, k: Literal['version']) -> int: ...
+
+
+@overload
+def get_version(item: _HasVersion) -> int: ...
+
+
+@overload
+def get_version(item: dict[str, Any]) -> int: ...
+
+
+def get_version(item: _HasVersion | dict[str, Any]) -> int:
+    return item['version']
+
+
+class Item(TypedDict, total=False):
+    val: str
+    version: int
+
+
+item = Item(val='test', version=1)
+xx = dict({'version': 2})
+get_version(item)
+get_version(xx)
+get_version({'version': 1, 'a': 1})
